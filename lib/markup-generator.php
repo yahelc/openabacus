@@ -19,7 +19,7 @@ function generateClientSelectorMarkup($clients){
 	return $client_selector;
 }
 
-$queries = $db[$abacus_db]->query("SELECT  slug, name, client, public, create_user FROM abacus2.query  LEFT JOIN abacus2.client_query_map USING(query_id) WHERE (public=1 OR create_user=?) AND  min_user_role_id <=(SELECT user_role_id FROM abacus2.user WHERE create_user=?) ORDER BY global DESC, order_index DESC, name ASC", array($user, $user ));	
+$queries = $db[$abacus_db]->query("SELECT  slug, name, client, public, create_user FROM query  LEFT JOIN client_query_map USING(query_id) WHERE (public=1 OR create_user=?) AND  min_user_role_id <=(SELECT user_role_id FROM user WHERE create_user=?) ORDER BY global DESC, order_index DESC, name ASC", array($user, $user ));	
 
 function generateQueryRadioButtons($queries){
 	$radioButtons = "";

@@ -1,4 +1,10 @@
 <?php
+$_SERVER["REMOTE_USER"] = "ycarmon";
+
+if(!isset($config)){
+    $config = json_decode(file_get_contents("./config.json"), true);
+    
+}
 if(!class_exists("db")){
     require_once dirname(__FILE__) . "/db.class.php";
 }

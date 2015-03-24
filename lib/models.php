@@ -11,7 +11,7 @@ class Query{
 		global $abacus_db;
 		$this->db = $db[$abacus_db];
 		$this->post = $post;
-		$this->data = $this->db->one("SELECT * FROM abacus2.query where slug=? LIMIT 1", array($post["query"]));
+		$this->data = $this->db->one("SELECT * FROM query where slug=? LIMIT 1", array($post["query"]));
 		$this->generateFileSlug();
 	}
 	
@@ -60,7 +60,7 @@ class User{
 		$this->db = $db[$abacus_db];
 		$user_role = $this->getUserRow();
 		if(!$user_role && $create){
-			$this->db->query("INSERT IGNORE INTO abacus2.user(create_user, user_role_id) VALUES (?, 1)", array($user));
+			$this->db->query("INSERT IGNORE INTO user(create_user, user_role_id) VALUES (?, 1)", array($user));
 			$user_role = $this->getUserRow();
 		}
 		$this->user_role_id = intval($user_role["user_role_id"]);
@@ -70,7 +70,7 @@ class User{
 	}
 	private function getUserRow(){
         
-		$user_row =  $this->db->one("SELECT user_id, user_role_id, create_user, user_role_name, user_type_id FROM abacus2.user INNER JOIN abacus2.user_role using(user_role_id) WHERE create_user=? LIMIT 1", array($this->user));
+		$user_row =  $this->db->one("SELECT user_id, user_role_id, create_user, user_role_name, user_type_id FROM `user` INNER JOIN user_role using(user_role_id) WHERE create_user=? LIMIT 1", array($this->user));
 		return $user_row;
 	}
 	

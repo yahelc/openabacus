@@ -175,10 +175,10 @@ function client_ftp_credentials($cvs_name){
     global $abacus_db; 
     
 	if(isset($_REQUEST["client_ftp_id"]) && intval($_REQUEST["client_ftp_id"]) > 0 ){
-		$ftp_data = $db[$abacus_db]->one("SELECT * FROM abacus2.client_ftp WHERE client_ftp_id=? AND client=? LIMIT 1", array(intval($_REQUEST["client_ftp_id"]), $cvs_name) );
+		$ftp_data = $db[$abacus_db]->one("SELECT * FROM client_ftp WHERE client_ftp_id=? AND client=? LIMIT 1", array(intval($_REQUEST["client_ftp_id"]), $cvs_name) );
 	}
 	else{ // grandfather in the old setup for scheduled queries. 
-		$ftp_data = $db[$abacus_db]->one("SELECT * FROM abacus2.client_ftp WHERE client=? ORDER BY client_ftp_id ASC LIMIT 1", array($cvs_name));
+		$ftp_data = $db[$abacus_db]->one("SELECT * FROM client_ftp WHERE client=? ORDER BY client_ftp_id ASC LIMIT 1", array($cvs_name));
 		
 	}
     return $ftp_data;

@@ -14,7 +14,7 @@ class QueryLog{
     	$post_parameters = (isset($job)) ? $job["post_parameters"] : http_build_query($_POST);
         
         
-		$log_sql = "INSERT INTO abacus2.query_log (query_name, client, post_parameters, create_user, scheduled_query_id) VALUES(:query_name, :client, :post_parameters, :create_user, :scheduled_query_id)";
+		$log_sql = "INSERT INTO query_log (query_name, client, post_parameters, create_user, scheduled_query_id) VALUES(:query_name, :client, :post_parameters, :create_user, :scheduled_query_id)";
     	try {
         		
 		    $db[$abacus_db]->query($log_sql, array("query_name"=>$log_query_name, "client"=> $cvs_name, "post_parameters"=> $post_parameters, "create_user"=> $_SERVER["REMOTE_USER"],  "scheduled_query_id"=> $scheduled_query_id));

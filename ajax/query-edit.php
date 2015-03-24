@@ -6,7 +6,7 @@ header("Content-type: application/json");
 $query_slug = $_REQUEST["slug"];
 
 if(count($_GET)){
-	$result_array = $db[$abacus_db]->one("SELECT query.*, GROUP_CONCAT(custom_field_id) as custom_fields FROM abacus2.query LEFT JOIN query__custom_field qcf ON qcf.query_id=query.query_id AND qcf.active=1 WHERE slug=? GROUP BY query_id;", $query_slug);
+	$result_array = $db[$abacus_db]->one("SELECT query.*, GROUP_CONCAT(custom_field_id) as custom_fields FROM query LEFT JOIN query__custom_field qcf ON qcf.query_id=query.query_id AND qcf.active=1 WHERE slug=? GROUP BY query_id;", $query_slug);
 	echo json_encode($result_array);
 	
 }
@@ -26,7 +26,7 @@ else if(count($_POST)){
 		echo json_encode($txt);
 		exit();
 	}
-	$query = $db[$abacus_db]->one("SELECT query_id, min_user_role_id, public, create_user FROM abacus2.query WHERE slug=?", $slug);
+	$query = $db[$abacus_db]->one("SELECT query_id, min_user_role_id, public, create_user FROM query WHERE slug=?", $slug);
 	
 	if(isset($id["query_id"])){ // this is an update
 		
@@ -50,15 +50,15 @@ else if(count($_POST)){
 
 	// reject non-private queries from analysts and employees
 	
-	$res = $db[$abacus_db]->query("INSERT INTO abacus2.query(slug, name, query_sql, global, public, create_user, min_user_role_id, description) VALUES(:slug, :name, :sql, :global, :public, :user, :min_user_role_id, :description) ON DUPLICATE KEY UPDATE query_sql = VALUES(query_sql), name = VALUES(name), global = VALUES(global), public = VALUES(public), min_user_role_id = VALUES(min_user_role_id), description = VALUES(description)", array("slug"=>$slug, "name"=>$name, "sql"=>$sql, "global"=>$global, "public"=>$public, "user"=>$user, "min_user_role_id"=>$min_user_role_id, "description"=>$description));
+	$res = $db[$abacus_db]->query("INSERT INTO query(slug, name, query_sql, global, public, create_user, min_user_role_id, description) VALUES(:slug, :name, :sql, :global, :public, :user, :min_user_role_id, :description) ON DUPLICATE KEY UPDATE query_sql = VALUES(query_sql), name = VALUES(name), global = VALUES(global), public = VALUES(public), min_user_role_id = VALUES(min_user_role_id), description = VALUES(description)", array("slug"=>$slug, "name"=>$name, "sql"=>$sql, "global"=>$global, "public"=>$public, "user"=>$user, "min_user_role_id"=>$min_user_role_id, "description"=>$description));
 	
-	$id = $db[$abacus_db]->one("SELECT query_id FROM abacus2.query WHERE slug=?", array($slug));
+	$id = $db[$abacus_db]->one("SELECT query_id FROM query WHERE slug=?", array($slug));
 	$query_id = $id["query_id"];
 	if(!$global && count($id)){
-			$db[$abacus_db]->query("INSERT IGNORE INTO abacus2.client_query_map(query_id, client) VALUES(?, ?)", array($query_id, $client));
+			$db[$abacus_db]->query("INSERT IGNORE INTO client_query_map(query_id, client) VALUES(?, ?)", array($query_id, $client));
 	}
 	else if($global === 1){ // if global, make sure we don't have any orphan client/query mappings
-		$db[$abacus_db]->query("DELETE FROM abacus2.client_query_map WHERE query_id=?", array($query_id));
+		$db[$abacus_db]->query("DELETE FROM client_query_map WHERE query_id=?", array($query_id));
 	}
 	$custom_fields = $_POST["custom_fields_for_query"];
 	
@@ -67,13 +67,13 @@ else if(count($_POST)){
 		$custom_field_ids = array();
 		foreach($custom_fields as $custom_field){
 			$custom_field_ids[] = $custom_field;
-			$db[$abacus_db]->query("INSERT IGNORE INTO abacus2.query__custom_field(query_id, custom_field_id, active) VALUES(?, ?, 1);", array($query_id, $custom_field)); 
+			$db[$abacus_db]->query("INSERT IGNORE INTO query__custom_field(query_id, custom_field_id, active) VALUES(?, ?, 1);", array($query_id, $custom_field)); 
 		}
-		$db[$abacus_db]->query("UPDATE abacus2.query__custom_field SET active=0 WHERE query_id=? AND custom_field_id NOT IN ?", array($query_id, $custom_field_ids));
-		$db[$abacus_db]->query("UPDATE abacus2.query__custom_field SET active=1 WHERE query_id=? AND custom_field_id IN ?", array($query_id, $custom_field_ids) );
+		$db[$abacus_db]->query("UPDATE query__custom_field SET active=0 WHERE query_id=? AND custom_field_id NOT IN ?", array($query_id, $custom_field_ids));
+		$db[$abacus_db]->query("UPDATE query__custom_field SET active=1 WHERE query_id=? AND custom_field_id IN ?", array($query_id, $custom_field_ids) );
 	}
 	else{ // if an update and there are no custom fields, that means we need to deactive all existing custom fields (because they've all been removed)
-		$db[$abacus_db]->query("UPDATE abacus2.query__custom_field SET active=0 WHERE query_id=?", $query_id);
+		$db[$abacus_db]->query("UPDATE query__custom_field SET active=0 WHERE query_id=?", $query_id);
 	}
 	
 	

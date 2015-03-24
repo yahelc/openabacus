@@ -30,7 +30,7 @@ else if(count($_POST)){
 	$run_time = $_POST["time"];
 	$name = $_POST["report_name"];
 	$query = isset($post_var["query"]) ? $post_var["query"] : "Custom Report";
-	$query_row = $db[$abacus_db]->one("SELECT query_id FROM abacus2.query WHERE slug=?", $query);
+	$query_row = $db[$abacus_db]->one("SELECT query_id FROM query WHERE slug=?", $query);
 	
 	$query_id = $query_row["query_id"];
 	if(!isset($query_row["query_id"])){
@@ -59,7 +59,7 @@ else if(count($_POST)){
 	}
 
 
-	$query_row = $db[$abacus_db]->query("INSERT INTO abacus2.scheduled_query(query_id, client, frequency, dayofmonth, dayofweek, post_parameters, create_user, active, run_time, next_run_dt, name) VALUES ?", array(array($query_id, $client, $frequency, $month, $day, $post_parameters, $user, 1, $run_time, $next_run_date_string, $name)) );
+	$query_row = $db[$abacus_db]->query("INSERT INTO scheduled_query(query_id, client, frequency, dayofmonth, dayofweek, post_parameters, create_user, active, run_time, next_run_dt, name) VALUES ?", array(array($query_id, $client, $frequency, $month, $day, $post_parameters, $user, 1, $run_time, $next_run_date_string, $name)) );
 
 	echo json_encode(["message"=>$alert->success("Query successfully scheduled. The first query will run: " . $next_run_date_string)]);
 	
@@ -67,7 +67,7 @@ else if(count($_POST)){
 else{
 	//get list of scheduled jobs
 	header("Content-Type: application/json");
-	echo json_encode($db[$abacus_db]->query("SELECT scheduled_query_id as id, client, name, post_parameters, frequency, coalesce(dayofweek, dayofmonth, frequency) as 'Run Day', run_time, last_run_dt, next_run_dt, create_user, active FROM abacus2.scheduled_query WHERE is_deleted = 0 AND (create_user=? OR ? IN(SELECT create_user FROM abacus2.user WHERE user_role_id=4 AND create_user=?)) ORDER BY active DESC, id DESC ", array($user, $user, $user)));
+	echo json_encode($db[$abacus_db]->query("SELECT scheduled_query_id as id, client, name, post_parameters, frequency, coalesce(dayofweek, dayofmonth, frequency) as 'Run Day', run_time, last_run_dt, next_run_dt, create_user, active FROM scheduled_query WHERE is_deleted = 0 AND (create_user=? OR ? IN(SELECT create_user FROM user WHERE user_role_id=4 AND create_user=?)) ORDER BY active DESC, id DESC ", array($user, $user, $user)));
 }
 
 ?>
