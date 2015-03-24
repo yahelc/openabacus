@@ -65,12 +65,12 @@ class User{
 		}
 		$this->user_role_id = intval($user_role["user_role_id"]);
 		$this->user_type_id = intval($user_role["user_type_id"]);
-		$this->user_role_name = intval($user_role["user_role_name"]);
+		$this->user_role_name = $this->roles[$this->user_role_id];
 		
 	}
 	private function getUserRow(){
         
-		$user_row =  $this->db->one("SELECT user_id, user_role_id, create_user, user_role_name, user_type_id FROM `user` INNER JOIN user_role using(user_role_id) WHERE create_user=? LIMIT 1", array($this->user));
+		$user_row =  $this->db->one("SELECT user_id, user_role_id, create_user, user_type_id FROM `user` WHERE create_user=? LIMIT 1", array($this->user));
 		return $user_row;
 	}
 	

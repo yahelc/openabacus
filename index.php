@@ -162,7 +162,6 @@ if(!isset($_POST["ajax"])){
 			    <ul class="dropdown-menu">
 				                  <li> <a id="create-group" href="#"><i class="icon-user"></i> Create Cons Group</a></li>
 				        <?php if($user->hasPermissions("Administrator")) {?>          <li> <a id="edit-user" href="#"><i class="icon-user"></i> Edit User Permissions</a></li><?php } ?>
-				                  <li> <a id="schema" href="/schema" target="_blank"><i class="icon-th-list"></i> Schema Reference</a></li>
 									<li> <a href="#" id="upload-file-button"><i class="icon-upload"></i> Upload File </a></li>
 			    </ul>
 			  </li>

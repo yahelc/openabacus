@@ -290,7 +290,7 @@ $(function(){
   </div>
   <div class="modal-body">
 
-	<iframe id="upload-iframe" style="border:0; width:100%" dev-src="ajax/upload_file.php"></iframe>
+	<iframe id="upload-iframe" style="border:0; width:100%" src="ajax/upload_file.php"></iframe>
   </div>
   <div class="modal-footer">
     <button class="btn" id="fileupload-modal-close" data-dismiss="modal" aria-hidden="true">Close</button>
