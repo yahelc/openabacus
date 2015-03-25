@@ -132,7 +132,7 @@ SHOW FULL PROCESSLIST;
 <h4>load_csv</h4>
 Load a CSV URL into a table. This can be a publicly accessible HTTP(s) URL, or an s3:// URL in the `$config["s3_bucket"]` s3 repo.
 ```
-{{ load_csv( "labouruk_scratch.mosaic_data","https://www.dropbox.com/s/v24rk3drjydzap6/Mosaic%20type%20by%20postcode.csv?dl=1") }}
+{{ load_csv( "data","https://www.dropbox.com/s/v24rk3drjydzap6/type%20by%20postcode.csv?dl=1") }}
 //generates:
-LOAD DATA LOCAL INFILE '/tmp/Mosaic%20type%20by%20postcode.csv?dl=1' INTO TABLE labouruk_scratch.mosaic_data FIELDS TERMINATED BY ','  OPTIONALLY ENCLOSED BY '"'  LINES TERMINATED BY '\n' IGNORE 1 LINES;
+LOAD DATA LOCAL INFILE '/tmp/type%20by%20postcode.csv?dl=1' INTO TABLE data FIELDS TERMINATED BY ','  OPTIONALLY ENCLOSED BY '"'  LINES TERMINATED BY '\n' IGNORE 1 LINES;
 ```
